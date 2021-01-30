@@ -1,3 +1,5 @@
+//All the components import here
+
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Header from './components/layout/Header';
@@ -21,6 +23,7 @@ class App extends Component {
   }
 
   // Toggle Complete
+  // For getting id from the check box
   markComplete = id => {
     this.setState({
       todos: this.state.todos.map(todo => {
@@ -36,6 +39,7 @@ class App extends Component {
   delTodo = id => {
     axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`).then(res =>
       this.setState({
+        //filter out the list that the id doesn't match
         todos: [...this.state.todos.filter(todo => todo.id !== id)]
       })
     );
@@ -44,22 +48,26 @@ class App extends Component {
   // Add Todo
   addTodo = title => {
     axios
+      //  here we imported to-do list api and can limit the number by using ?_limit=10 for example
       .post('https://jsonplaceholder.typicode.com/todos', {
         title,
         completed: false
       })
       .then(res => {
+        //uuid.v4 is used to get autogenerate id
         res.data.id = uuid.v4();
+        // ... is called spread operator
         this.setState({ todos: [...this.state.todos, res.data] });
       });
   };
 
+
+  // the part that looks like html is called jsx (A way to write output components with javascript
+
+  // here we created 2 separate route for the main page and about page (also separate route tag)
   render() {
     return (
       <Router>
-
-        {/*this part is called jsx (A way to write output components with javascript)*/}
-
         <div className="App">
           <div className="container">
             <Header />
@@ -69,7 +77,6 @@ class App extends Component {
               render={props => (
                 <React.Fragment>
 
-                  {/*These tags came from the file that we created in the components folder (AddTodo, Todos) */}
                   <AddTodo addTodo={this.addTodo} />
                   <Todos
                     todos={this.state.todos}
@@ -83,7 +90,9 @@ class App extends Component {
           </div>
         </div>
       </Router>
-    );
+    // The tag that is not in html comes from the file that we created in the components folder (AddTodo, Todos)
+
+  );
   }
 }
 
